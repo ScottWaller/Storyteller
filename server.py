@@ -7,6 +7,7 @@ from gtts import gTTS
 import pyttsx
 import random
 import uuid
+import subprocess
 
 
 def generate_random_voice():
@@ -23,6 +24,7 @@ class TextHandler(tornado.web.RequestHandler):
         # gTTS
         tts = gTTS(text=text, lang='en')
         tts.save("post_tts.mp3")
+        subprocess.call("mpg123 ./post_tts.mp3", shell=True)
 
         #pyttsx
         engine = pyttsx.init()
@@ -30,7 +32,7 @@ class TextHandler(tornado.web.RequestHandler):
             voice = generate_random_voice()
             print voice
             engine.setProperty('voice', voice.id)
-            engine.setProperty('rate', random.randint(10,20))
+            engine.setProperty('rate', random.randint(50,100))
             engine.say(sentence)
         engine.runAndWait()
 
